@@ -82,3 +82,8 @@
 .btn button:active{
     transform: scale(0.98);
 }
+
+.validation
+{
+    color: red;
+}
