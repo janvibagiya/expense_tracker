@@ -1,10 +1,50 @@
+import { useEffect, useState } from "react";
 import "../styles/EditModal.css";
 
-function EditModal() {
+function EditModal({ editId, onClose, onUpdate }) {
+  const [formData, setFormData] = useState({
+    id: editId,
+    amount: null,
+    description: "",
+    date: "",
+    category: "",
+  });
+
+  useEffect(() => {
+    const expenses = JSON.parse(localStorage.getItem("expenses") || "[]");
+    const expense = expenses.find((item) => String(item.id) === String(editId));
+
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    if (expense) setFormData(expense);
+  }, [editId]);
+
+  //Handle Change
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({
+      ...prev,
+      [name]: name === "amount" ? Number(value) : value,
+    }));
+  };
+
+  // Update expense
+  const handleUpdate = (e) => {
+    e.preventDefault();
+
+    const expenses = JSON.parse(localStorage.getItem("expenses") || "[]");
+    const updatedExpenses = expenses.map((item) =>
+      String(item.id) === String(editId) ? formData : item,
+    );
+
+    localStorage.setItem("expenses", JSON.stringify(updatedExpenses));
+    onUpdate();
+    onClose();
+  };
+
   return (
     <div className="model">
       <div className="form-box">
-        <form>
+        <form onSubmit={handleUpdate}>
           <h1>Edit Expense</h1>
 
           <input
@@ -12,6 +52,9 @@ function EditModal() {
             name="amount"
             defaultValue=""
             placeholder="Amount"
+            value={formData.amount || ""}
+            onChange={handleChange}
+            required
           />
 
           <input
@@ -19,26 +62,41 @@ function EditModal() {
             name="description"
             defaultValue=""
             placeholder="Description"
+            value={formData.description}
+            onChange={handleChange}
+            required
           />
 
-          <input type="date" name="date" defaultValue="" />
+          <input
+            type="date"
+            name="date"
+            defaultValue=""
+            value={formData.date}
+            onChange={handleChange}
+          />
 
           <label htmlFor="category">Category:</label>
-          <select id="category" name="category" defaultValue="">
+          <select
+            id="category"
+            name="category"
+            value={formData.category}
+            onChange={handleChange}
+            defaultValue=""
+          >
             <option value="">Select Category</option>
             <option value="food">Food</option>
             <option value="shopping">Shopping</option>
-            <option value="Transportaion">Transportaion</option>
+            <option value="Transportation">Transportation</option>
             <option value="education">Education</option>
             <option value="phoneBill">Phone Bill</option>
             <option value="entertainment">Entertainment</option>
           </select>
 
           <div className="model-btn">
-            <button type="button" className="edit">
+            <button className="edit" onChange={onUpdate}>
               Update
             </button>
-            <button type="button" className="cancle">
+            <button className="cancle" onClick={onClose}>
               Cancle
             </button>
           </div>

@@ -1,19 +1,18 @@
-import { createBrowserRouter, RouterProvider} from "react-router-dom";
-import "./App.css"
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import "./App.css";
 import Homepage from "./pages/Homepage";
 import AddExpensepage from "./pages/AddExpensepage";
-function App()
-{
-  const route=createBrowserRouter([
-    {path:'/',element:<Homepage/>},
-    {path:'/add-expense',element:<AddExpensepage/>}
+import ExpenseDetails from "./components/ExpenseDetails";
+function App() {
+  const route = createBrowserRouter([
+    { path: '/', element: <Homepage /> },
+    { path: '/add-expense', element: <AddExpensepage /> },
+    { path: '/expenseDetails/:id', element: <ExpenseDetails /> },
+  ]);
 
-  ])
-
-  return(
+  return (
     <>
-
-    <RouterProvider router={route}/>
+      <RouterProvider router={route} />
     </>
   );
 }
