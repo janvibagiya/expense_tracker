@@ -102,3 +102,9 @@
     background-color: antiquewhite;
     color: #2B2A2A;
 }
+
+/*  Active route */
+.links.active {
+    background-color: #FEB05D;
+    color: #2B2A2A;
+}
