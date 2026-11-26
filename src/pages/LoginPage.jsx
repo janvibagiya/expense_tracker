@@ -65,7 +65,7 @@ export default function LoginPage() {
 
                     <h2 className="login-title" >Login Now!</h2>
 
-                    <form onSubmit={handleSubmit} onValidate>
+                    <form onSubmit={handleSubmit} noValidate>
                         <label>Name</label>
                         <input 
                             type="text" 

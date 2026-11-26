@@ -6,6 +6,8 @@ import { useNavigate } from "react-router-dom";
 
 export default function ExpenseList() {
   const [expenses, setExpenses] = useState([]);
+  const [filter, setFilter] = useState("all");
+  const [searchTerm, setSearchTerm] = useState("");
   const [deleteExpense, setDeleteExpense] = useState(null);
   const [openModel, setOpenModel] = useState(false);
   const [editId, setEditId] = useState(null);
@@ -25,6 +27,23 @@ export default function ExpenseList() {
     (sum, item) => sum + Number(item.amount),
     0,
   );
+  //Filtered expenses
+  const filteredExpenses = expenses.filter((item) => {
+    const matchesCategory = filter === "all" || item.category === filter;
+    const matchesSearch = item.description
+      .toLowerCase()
+      .includes(searchTerm.toLowerCase());
+    return matchesCategory && matchesSearch;
+  });
+
+  //Handlers
+  const handleFilterChange = (e) => {
+    setFilter(e.target.value);
+  };
+
+  const handleSearchChange = (e) => {
+    setSearchTerm(e.target.value);
+  };
 
   const handleDelete = (id) => {
     const updatedExpenses = expenses.filter((item) => item.id !== id);
@@ -56,15 +75,22 @@ export default function ExpenseList() {
           </div>
 
           <div>
-            <select>
-              <option>All categories</option>
-              <option>Food</option>
-              <option>Travel</option>
-              <option>Shopping</option>
-              <option>Entertainment</option>
+            <select value={filter} onChange={handleFilterChange}>
+              <option value="all">All categories</option>
+              <option value="food">Food</option>
+              <option value="Transportation">Travel</option>
+              <option value="education">Education</option>
+              <option value="shopping">Shopping</option>
+              <option value="phoneBill">Phone Bill</option>
+              <option value="entertainment">Entertainment</option>
             </select>
 
-            <input type="search" placeholder="Search expenses..." />
+            <input
+              type="search"
+              placeholder="Search expenses..."
+              value={searchTerm}
+              onChange={handleSearchChange}
+            />
           </div>
         </div>
 
@@ -80,8 +106,8 @@ export default function ExpenseList() {
           </thead>
 
           <tbody>
-            {expenses.length > 0 ? (
-              expenses.map((expense) => (
+            {filteredExpenses.length > 0 ? (
+              filteredExpenses.map((expense) => (
                 <tr key={expense.id}>
                   <td>{expense.amount}</td>
                   <td>{expense.description}</td>
@@ -102,7 +128,12 @@ export default function ExpenseList() {
                     >
                       Edit
                     </button>
-                    <button className="btn-readmore" onClick={() => handleReadMore(expense.id)}>View</button>
+                    <button
+                      className="btn-readmore"
+                      onClick={() => handleReadMore(expense.id)}
+                    >
+                      View
+                    </button>
                   </td>
                 </tr>
               ))
